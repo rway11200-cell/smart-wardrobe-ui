@@ -1,0 +1,11 @@
+{
+    "schema_version": 2,
+    "commit": "",
+    "indexed_at": "2026-07-08T23:21:13Z",
+    "project": "smart-wardrobe-ui",
+    "nodes": 74,
+    "edges": 144,
+    "original_size": 1310720,
+    "compressed_size": 77759,
+    "compression_level": 9
+}
