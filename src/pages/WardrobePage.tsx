@@ -29,6 +29,13 @@ const sections: WardrobeSection[] = [
   { title: 'Unavailable / Repair', statuses: ['unavailable', 'repair'] },
 ];
 
+function getIdentityLocation(identity: Identity) {
+  return {
+    homeCity: identity.profile?.home_city ?? identity.home_city ?? '',
+    homeCountry: identity.profile?.home_country ?? identity.home_country ?? '',
+  };
+}
+
 export function WardrobePage({ identityPublicId, onClearIdentity }: WardrobePageProps) {
   const [identity, setIdentity] = useState<Identity | null>(null);
   const [categories, setCategories] = useState<ClothingCategory[]>([]);
@@ -36,6 +43,7 @@ export function WardrobePage({ identityPublicId, onClearIdentity }: WardrobePage
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [updatingItemId, setUpdatingItemId] = useState<string | number | null>(null);
+  const identityLocation = identity ? getIdentityLocation(identity) : null;
 
   async function loadWardrobe() {
     setError('');
@@ -88,9 +96,9 @@ export function WardrobePage({ identityPublicId, onClearIdentity }: WardrobePage
         <div>
           <p className="eyebrow">Smart Wardrobe</p>
           <h1>{identity ? `${identity.display_name}'s wardrobe` : 'Wardrobe'}</h1>
-          {identity && (
+          {identityLocation && (identityLocation.homeCity || identityLocation.homeCountry) && (
             <p className="muted">
-              {identity.home_city}, {identity.home_country}
+              {[identityLocation.homeCity, identityLocation.homeCountry].filter(Boolean).join(', ')}
             </p>
           )}
         </div>

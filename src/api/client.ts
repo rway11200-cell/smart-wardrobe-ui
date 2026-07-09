@@ -3,8 +3,12 @@ export type ClothingStatus = 'clean' | 'worn' | 'laundry' | 'unavailable' | 'rep
 export type Identity = {
   public_id: string;
   display_name: string;
-  home_city: string;
-  home_country: string;
+  home_city?: string;
+  home_country?: string;
+  profile?: {
+    home_city: string;
+    home_country: string;
+  };
 };
 
 export type CreateIdentityRequest = {

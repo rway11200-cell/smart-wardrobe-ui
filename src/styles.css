@@ -60,6 +60,17 @@ button:disabled {
   padding: 1.5rem;
 }
 
+.identity-panel {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.divider {
+  background: #e1d7c8;
+  height: 1px;
+  width: 100%;
+}
+
 .app-header {
   align-items: flex-start;
   display: flex;
