@@ -12,6 +12,10 @@ function formatRating(value: number) {
 }
 
 export function ClothingCard({ item, onChangeStatus, isUpdating }: ClothingCardProps) {
+  const canMarkClean = item.current_status !== 'clean';
+  const canMarkUnavailable = ['clean', 'worn', 'laundry'].includes(item.current_status);
+  const canSendToRepair = ['clean', 'worn', 'unavailable'].includes(item.current_status);
+
   return (
     <article className="clothing-card">
       {item.image_url && (
@@ -56,7 +60,7 @@ export function ClothingCard({ item, onChangeStatus, isUpdating }: ClothingCardP
           </button>
         )}
 
-        {item.current_status !== 'clean' && (
+        {canMarkClean && (
           <button
             type="button"
             className="secondary-button"
@@ -64,6 +68,28 @@ export function ClothingCard({ item, onChangeStatus, isUpdating }: ClothingCardP
             disabled={isUpdating}
           >
             Mark clean
+          </button>
+        )}
+
+        {canMarkUnavailable && (
+          <button
+            type="button"
+            className="secondary-button"
+            onClick={() => onChangeStatus(item, 'unavailable')}
+            disabled={isUpdating}
+          >
+            Mark unavailable
+          </button>
+        )}
+
+        {canSendToRepair && (
+          <button
+            type="button"
+            className="secondary-button"
+            onClick={() => onChangeStatus(item, 'repair')}
+            disabled={isUpdating}
+          >
+            Send to repair
           </button>
         )}
       </div>
