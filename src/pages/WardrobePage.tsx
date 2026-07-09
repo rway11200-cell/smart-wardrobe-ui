@@ -101,6 +101,7 @@ export function WardrobePage({ identityPublicId, onClearIdentity }: WardrobePage
         <div>
           <p className="eyebrow">Smart Wardrobe</p>
           <h1>{identity ? `${identity.display_name}'s wardrobe` : 'Wardrobe'}</h1>
+          {identity && <p className="muted">Nickname: {identity.nickname}</p>}
           {identityLocation && (identityLocation.homeCity || identityLocation.homeCountry) && (
             <p className="muted">
               {[identityLocation.homeCity, identityLocation.homeCountry].filter(Boolean).join(', ')}

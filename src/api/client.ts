@@ -3,6 +3,7 @@ export type ClothingStatus = 'clean' | 'worn' | 'laundry' | 'unavailable' | 'rep
 export type Identity = {
   public_id: string;
   display_name: string;
+  nickname: string;
   home_city?: string;
   home_country?: string;
   profile?: {
@@ -13,6 +14,7 @@ export type Identity = {
 
 export type CreateIdentityRequest = {
   display_name: string;
+  nickname: string;
 };
 
 export type ClothingCategory = {
@@ -57,7 +59,16 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
   if (!response.ok) {
     const text = await response.text();
-    throw new Error(text || `API request failed with status ${response.status}`);
+    let detail = '';
+
+    try {
+      const body = JSON.parse(text) as { detail?: string };
+      detail = body.detail ?? '';
+    } catch {
+      // Fall through to the raw text error below when the response is not JSON.
+    }
+
+    throw new Error(detail || text || `API request failed with status ${response.status}`);
   }
 
   if (response.status === 204) {
@@ -76,6 +87,10 @@ export function createIdentity(payload: CreateIdentityRequest) {
 
 export function getIdentity(publicId: string) {
   return request<Identity>(`/identities/${publicId}`);
+}
+
+export function getIdentityByNickname(nickname: string) {
+  return request<Identity>(`/identities/nickname/${encodeURIComponent(nickname)}`);
 }
 
 export async function getClothingCategories() {

@@ -1,5 +1,5 @@
 import { FormEvent, useState } from 'react';
-import { createIdentity, getIdentity } from '../api/client';
+import { createIdentity, getIdentityByNickname } from '../api/client';
 
 type IdentitySetupProps = {
   onIdentityReady: (publicId: string) => void;
@@ -7,7 +7,8 @@ type IdentitySetupProps = {
 
 export function IdentitySetup({ onIdentityReady }: IdentitySetupProps) {
   const [displayName, setDisplayName] = useState('');
-  const [existingPublicId, setExistingPublicId] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [existingNickname, setExistingNickname] = useState('');
   const [createError, setCreateError] = useState('');
   const [existingError, setExistingError] = useState('');
   const [isCreating, setIsCreating] = useState(false);
@@ -21,6 +22,7 @@ export function IdentitySetup({ onIdentityReady }: IdentitySetupProps) {
     try {
       const identity = await createIdentity({
         display_name: displayName,
+        nickname,
       });
 
       onIdentityReady(identity.public_id);
@@ -36,11 +38,11 @@ export function IdentitySetup({ onIdentityReady }: IdentitySetupProps) {
     setExistingError('');
     setIsContinuing(true);
 
-    const publicId = existingPublicId.trim();
+    const nickname = existingNickname.trim();
 
     try {
-      await getIdentity(publicId);
-      onIdentityReady(publicId);
+      const identity = await getIdentityByNickname(nickname);
+      onIdentityReady(identity.public_id);
     } catch (err) {
       setExistingError(err instanceof Error ? err.message : 'Could not find that identity.');
     } finally {
@@ -55,7 +57,7 @@ export function IdentitySetup({ onIdentityReady }: IdentitySetupProps) {
           <p className="eyebrow">Smart Wardrobe</p>
           <h1>Create your identity</h1>
           <p className="muted">
-            This first identity lets the frontend read and write wardrobe data through the API.
+            This first identity lets the frontend read and write wardrobe data through the API. The nickname is what you will use to continue later.
           </p>
         </div>
 
@@ -65,8 +67,21 @@ export function IdentitySetup({ onIdentityReady }: IdentitySetupProps) {
             <input
               value={displayName}
               onChange={(event) => setDisplayName(event.target.value)}
-              placeholder="Alex Morgan"
+              placeholder="Demo User"
               required
+            />
+          </label>
+
+          <label>
+            Nickname
+            <input
+              value={nickname}
+              onChange={(event) => setNickname(event.target.value)}
+              placeholder="demo_user"
+              required
+              minLength={3}
+              maxLength={50}
+              pattern="[a-zA-Z0-9_-]+"
             />
           </label>
 
@@ -82,18 +97,21 @@ export function IdentitySetup({ onIdentityReady }: IdentitySetupProps) {
         <div>
           <h2>Use existing identity</h2>
           <p className="muted">
-            Paste a known public_id to continue with an identity that already exists.
+            Use your nickname to continue with an identity that already exists.
           </p>
         </div>
 
         <form className="form" onSubmit={handleUseExisting}>
           <label>
-            Identity public_id
+            Nickname
             <input
-              value={existingPublicId}
-              onChange={(event) => setExistingPublicId(event.target.value)}
-              placeholder="Paste public_id here"
+              value={existingNickname}
+              onChange={(event) => setExistingNickname(event.target.value)}
+              placeholder="demo_user"
               required
+              minLength={3}
+              maxLength={50}
+              pattern="[a-zA-Z0-9_-]+"
             />
           </label>
 

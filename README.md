@@ -27,14 +27,14 @@ You can copy `.env.example` as a starting point for local development.
 
 When the app opens without an active identity, it shows two options:
 
-1. Create a new identity with `display_name`.
-2. Use an existing identity by pasting its `public_id`.
+1. Create a new identity with `display_name` and a unique `nickname`.
+2. Use an existing identity by typing its `nickname`.
 
 Creating an identity calls `POST /identities`. If the API returns a `public_id`, the app stores it in `localStorage` and opens the wardrobe screen.
 
-Using an existing identity calls `GET /identities/{public_id}` first. If the API finds it, the app stores that `public_id` in `localStorage` and opens the wardrobe screen.
+Using an existing identity calls `GET /identities/nickname/{nickname}` first. If the API finds it, the app stores that identity's `public_id` in `localStorage` and opens the wardrobe screen.
 
-The `public_id` is not real authentication. It is only the active demo/development identity used by this frontend to read and write wardrobe data. There is no login, password, JWT, or session handling in this app.
+The `nickname` and `public_id` are not real authentication. They are only demo/development identifiers used by this frontend to read and write wardrobe data. There is no login, password, JWT, or session handling in this app.
 
 ### Clothing colors
 
