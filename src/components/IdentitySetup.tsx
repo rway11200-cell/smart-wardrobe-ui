@@ -7,8 +7,6 @@ type IdentitySetupProps = {
 
 export function IdentitySetup({ onIdentityReady }: IdentitySetupProps) {
   const [displayName, setDisplayName] = useState('');
-  const [homeCity, setHomeCity] = useState('');
-  const [homeCountry, setHomeCountry] = useState('');
   const [existingPublicId, setExistingPublicId] = useState('');
   const [createError, setCreateError] = useState('');
   const [existingError, setExistingError] = useState('');
@@ -23,8 +21,6 @@ export function IdentitySetup({ onIdentityReady }: IdentitySetupProps) {
     try {
       const identity = await createIdentity({
         display_name: displayName,
-        home_city: homeCity,
-        home_country: homeCountry,
       });
 
       onIdentityReady(identity.public_id);
@@ -69,27 +65,7 @@ export function IdentitySetup({ onIdentityReady }: IdentitySetupProps) {
             <input
               value={displayName}
               onChange={(event) => setDisplayName(event.target.value)}
-              placeholder="Sebastian"
-              required
-            />
-          </label>
-
-          <label>
-            Home city
-            <input
-              value={homeCity}
-              onChange={(event) => setHomeCity(event.target.value)}
-              placeholder="Buin"
-              required
-            />
-          </label>
-
-          <label>
-            Home country
-            <input
-              value={homeCountry}
-              onChange={(event) => setHomeCountry(event.target.value)}
-              placeholder="Chile"
+              placeholder="Alex Morgan"
               required
             />
           </label>

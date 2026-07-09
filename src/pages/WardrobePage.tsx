@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import {
   ClothingCategory,
+  ClothingColor,
   ClothingItem,
   ClothingStatus,
   Identity,
   getClothingCategories,
+  getClothingColors,
   getClothingItems,
   getIdentity,
   updateClothingItemStatus,
@@ -39,6 +41,7 @@ function getIdentityLocation(identity: Identity) {
 export function WardrobePage({ identityPublicId, onClearIdentity }: WardrobePageProps) {
   const [identity, setIdentity] = useState<Identity | null>(null);
   const [categories, setCategories] = useState<ClothingCategory[]>([]);
+  const [colors, setColors] = useState<ClothingColor[]>([]);
   const [items, setItems] = useState<ClothingItem[]>([]);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -49,14 +52,16 @@ export function WardrobePage({ identityPublicId, onClearIdentity }: WardrobePage
     setError('');
 
     try {
-      const [identityResponse, categoriesResponse, itemsResponse] = await Promise.all([
+      const [identityResponse, categoriesResponse, colorsResponse, itemsResponse] = await Promise.all([
         getIdentity(identityPublicId),
         getClothingCategories(),
+        getClothingColors(),
         getClothingItems(identityPublicId),
       ]);
 
       setIdentity(identityResponse);
       setCategories(categoriesResponse);
+      setColors(colorsResponse);
       setItems(itemsResponse);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not load wardrobe.');
@@ -116,6 +121,7 @@ export function WardrobePage({ identityPublicId, onClearIdentity }: WardrobePage
           <ClothingForm
             identityPublicId={identityPublicId}
             categories={categories}
+            colors={colors}
             onCreated={loadWardrobe}
           />
 

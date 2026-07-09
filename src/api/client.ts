@@ -13,13 +13,17 @@ export type Identity = {
 
 export type CreateIdentityRequest = {
   display_name: string;
-  home_city: string;
-  home_country: string;
 };
 
 export type ClothingCategory = {
   id?: number | string;
   name: string;
+};
+
+export type ClothingColor = {
+  name: string;
+  hex_code: string;
+  display_order: number;
 };
 
 export type ClothingItem = {
@@ -83,6 +87,10 @@ export async function getClothingCategories() {
 
     return category;
   });
+}
+
+export function getClothingColors() {
+  return request<ClothingColor[]>('/clothing-colors');
 }
 
 export function getClothingItems(publicId: string) {

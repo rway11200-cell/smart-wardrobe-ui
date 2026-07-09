@@ -27,7 +27,7 @@ You can copy `.env.example` as a starting point for local development.
 
 When the app opens without an active identity, it shows two options:
 
-1. Create a new identity with `display_name`, `home_city`, and `home_country`.
+1. Create a new identity with `display_name`.
 2. Use an existing identity by pasting its `public_id`.
 
 Creating an identity calls `POST /identities`. If the API returns a `public_id`, the app stores it in `localStorage` and opens the wardrobe screen.
@@ -35,6 +35,10 @@ Creating an identity calls `POST /identities`. If the API returns a `public_id`,
 Using an existing identity calls `GET /identities/{public_id}` first. If the API finds it, the app stores that `public_id` in `localStorage` and opens the wardrobe screen.
 
 The `public_id` is not real authentication. It is only the active demo/development identity used by this frontend to read and write wardrobe data. There is no login, password, JWT, or session handling in this app.
+
+### Clothing colors
+
+The clothing form loads available colors from `GET /clothing-colors` and shows them in a select input. Each color option uses the API `name` as the value sent when creating a clothing item, and displays the selected `hex_code` as a small preview.
 
 ```mermaid
 flowchart TD

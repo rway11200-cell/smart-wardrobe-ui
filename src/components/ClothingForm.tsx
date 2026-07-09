@@ -1,9 +1,15 @@
 import { FormEvent, useEffect, useState } from 'react';
-import { ClothingCategory, CreateClothingItemRequest, createClothingItem } from '../api/client';
+import {
+  ClothingCategory,
+  ClothingColor,
+  CreateClothingItemRequest,
+  createClothingItem,
+} from '../api/client';
 
 type ClothingFormProps = {
   identityPublicId: string;
   categories: ClothingCategory[];
+  colors: ClothingColor[];
   onCreated: () => void;
 };
 
@@ -21,7 +27,7 @@ const initialForm: CreateClothingItemRequest = {
   current_status: 'clean',
 };
 
-export function ClothingForm({ identityPublicId, categories, onCreated }: ClothingFormProps) {
+export function ClothingForm({ identityPublicId, categories, colors, onCreated }: ClothingFormProps) {
   const [form, setForm] = useState<CreateClothingItemRequest>(initialForm);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,6 +37,12 @@ export function ClothingForm({ identityPublicId, categories, onCreated }: Clothi
       updateField('category_name', categories[0].name);
     }
   }, [categories, form.category_name]);
+
+  useEffect(() => {
+    if (colors.length > 0 && form.color === initialForm.color) {
+      updateField('color', colors[0].name);
+    }
+  }, [colors, form.color]);
 
   function updateField<K extends keyof CreateClothingItemRequest>(
     field: K,
@@ -49,6 +61,7 @@ export function ClothingForm({ identityPublicId, categories, onCreated }: Clothi
       setForm({
         ...initialForm,
         category_name: categories[0]?.name ?? initialForm.category_name,
+        color: colors[0]?.name ?? initialForm.color,
       });
       onCreated();
     } catch (err) {
@@ -90,12 +103,19 @@ export function ClothingForm({ identityPublicId, categories, onCreated }: Clothi
 
           <label>
             Color
-            <input
+            <select
               value={form.color}
               onChange={(event) => updateField('color', event.target.value)}
-              placeholder="black"
               required
-            />
+            >
+              {colors.length === 0 && <option value="">No colors available</option>}
+              {colors.map((color) => (
+                <option key={color.name} value={color.name}>
+                  {color.name}
+                </option>
+              ))}
+            </select>
+            {form.color && <ColorPreview color={colors.find((color) => color.name === form.color)} />}
           </label>
 
           <label>
@@ -133,6 +153,23 @@ export function ClothingForm({ identityPublicId, categories, onCreated }: Clothi
         </button>
       </form>
     </section>
+  );
+}
+
+type ColorPreviewProps = {
+  color: ClothingColor | undefined;
+};
+
+function ColorPreview({ color }: ColorPreviewProps) {
+  if (!color) {
+    return null;
+  }
+
+  return (
+    <span className="color-preview">
+      <span className="color-swatch" style={{ backgroundColor: color.hex_code }} />
+      {color.hex_code}
+    </span>
   );
 }
 
