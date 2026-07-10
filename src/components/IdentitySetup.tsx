@@ -57,7 +57,7 @@ export function IdentitySetup({ onIdentityReady }: IdentitySetupProps) {
           <p className="eyebrow">Smart Wardrobe</p>
           <h1>Create your identity</h1>
           <p className="muted">
-            Hi!
+            Hi!!
           </p>
           <p className="muted">
             This first identity lets the frontend read and write wardrobe data through the API. The nickname is what you will use to continue later.
